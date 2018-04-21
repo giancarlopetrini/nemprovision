@@ -1,5 +1,5 @@
 {
-  "name": "xemwallet",
+  "name": "nemprovision",
   "version": "1.0.0",
   "description": "API for creating wallets that work with XEM",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/giancarlopetrini/xemwallet.git"
+    "url": "git+https://github.com/giancarlopetrini/nemprovision.git"
   },
   "keywords": [],
   "author": "",
