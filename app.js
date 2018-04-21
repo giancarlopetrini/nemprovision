@@ -3,12 +3,10 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var levelup = require('levelup');
 var leveldown = require('leveldown');
+var nem = require("nem-sdk").default;
 
 var app = express();
-
 app.use(bodyParser.json())
-
-var nem = require("nem-sdk").default;
 var db = levelup(leveldown('./walletdb'));
 
 app.listen(3000);
@@ -21,7 +19,30 @@ app.post("/v1/wallet/:id", (req, res) => {
             console.log("Creating wallet for: " + id);
             // run createWallet code here.. then take output
             // and write to db
-            var [privateKey, pubKey] = generateKeyPair();
+
+            /* wallet.algo s:
+            PRNG = pass:bip32
+            private key wallets = pass:enc
+            brain wallets = pass:6k
+            Hardware wallets = trezor
+            */
+
+            var wallet = nem.model.wallet.createPRNG(id, "password", nem.model.network.data.testnet.id);
+            // Create a common object
+            // var common = nem.model.objects.create("common")("walletPassword/password", "");
+
+            // Get the wallet account to decrypt
+            var walletAccount = wallet.accounts[0];
+            var walletAddress = wallet.accounts[0].address;
+            console.log(walletAddress);
+
+            // Decrypt account private key 
+            // nem.crypto.helpers.passwordToPrivatekey(common, walletAccount, "pass:bip32");
+
+            // The common object now has a private key
+            // console.log(common)
+
+            /* var [privateKey, pubKey] = generateKeyPair();
             console.log("pub key: ", pubKey);
             console.log("private key:", privateKey);
 
@@ -34,29 +55,34 @@ app.post("/v1/wallet/:id", (req, res) => {
                 console.log("Address validation?", isValid);
                 res.status(500);
                 res.send("NEM address failed validation");
+
                 return
             }
+
+
 
             db.put(id, address, (error) => {
                 if (error) {
                     console.log("Unable to add record..", error)
                     res.status(500);
                     res.send("Unable to add record to database.");
+
                     return
                 }
             })
             res.send({
                 id: id,
                 account: address
-            })
+            }) */
         } else {
             res.send({
                 id: id,
                 account: value.toString()
             })
-        };
+        }
     });
 });
+
 
 var generateKeyPair = () => {
     // make random bytes
@@ -79,5 +105,16 @@ var generateWallet = (id, privateKey) => {
     fs.writeFile("tmp/wallet" + id + ".wlt", base64, (error) => {
         if (error) return console.log(error);
     });
+
+
     console.log("/tmp/wallet" + id + ".wlt created!");
+
+    // Create a common object
+    var common = nem.model.objects.create("common")("walletPassword/samplePass", "");
+    // Get the wallet account to decrypt
+    var walletAccount = wallet.accounts[0];
+    // Decrypt account private key 
+    nem.crypto.helpers.passwordToPrivatekey(common, walletAccount, "pass:enc");
+    // The common object now has a private key
+    console.log(common);
 }
