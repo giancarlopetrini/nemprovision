@@ -4,7 +4,7 @@ A simple API for creating valid NEM addresses and wallets, and storing them in a
 ### Getting Started
 
 To initialize the db and run the first time: `npm install && npm run new`  
-*This will clean out any artifacts in the `walletdb` folder. **Do not** perform if migrating an existing implementation to a new server/deployment!*
+*This will clean out any artifacts in the `walletdb` folder. **Do not** perform if migrating an existing implementation to a new server/deployment without backing up `walletdb` first!*
 
 On subsequent starts, use:     
 `npm run dev` for use with NEM testnet  
