@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "new": "rm -rf walletdb/* && nodemon app.js",
+    "dev": "nodemon app.js",
+    "prod": "NEMNET=nem.model.network.data.mainnet.id nodemon app.js"
   },
   "repository": {
     "type": "git",
